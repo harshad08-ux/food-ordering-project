@@ -1,0 +1,195 @@
+/* =======================
+   GLOBAL
+======================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: #f4f6f8;
+  color: #2c3e50;
+}
+
+/* =======================
+   NAVBAR
+======================= */
+.navbar {
+  background: #ffffff;
+  padding: 16px 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.nav-buttons button {
+  background: #ff6b00;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.nav-buttons button:hover {
+  background: #e55a00;
+}
+
+/* =======================
+   PAGE CONTAINER
+======================= */
+.page-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 24px;
+}
+.page-content {
+  padding-bottom: 80px;
+}
+
+
+/* =======================
+   HERO
+======================= */
+.hero {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.hero h2 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.hero p {
+  color: #777;
+  font-size: 16px;
+}
+
+/* =======================
+   CATEGORY SECTION
+======================= */
+.category-section {
+  margin-bottom: 40px;
+}
+
+.category-section h2 {
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+
+/* =======================
+   FOOD GRID
+======================= */
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* =======================
+   FOOD CARD
+======================= */
+.food-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.food-card:hover {
+  transform: translateY(-4px);
+}
+
+.food-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.food-card h3 {
+  font-size: 16px;
+  margin: 10px 0 4px;
+}
+
+.food-card .price {
+  font-weight: 600;
+  color: #ff6b00;
+  margin-bottom: 8px;
+}
+
+.food-card button {
+  width: 100%;
+  padding: 8px;
+  background: #ff6b00;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.food-card button:hover {
+  background: #e55a00;
+}
+
+/* =======================
+   ERROR
+======================= */
+.error {
+  color: red;
+  text-align: center;
+  margin: 10px 0;
+}
+
+
+/* 📱 MOBILE NAVBAR */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .nav-buttons button {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
+
+/* 📱 FOOD GRID MOBILE */
+@media (max-width: 600px) {
+  .food-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .food-card {
+    padding: 15px;
+  }
+
+  .food-card img {
+    height: 160px;
+  }
+}
+
+button {
+  min-height: 44px; /* Apple mobile standard */
+}

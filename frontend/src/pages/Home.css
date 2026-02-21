@@ -1,0 +1,110 @@
+/* ===== HERO ===== */
+.restaurant-hero {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+}
+
+.restaurant-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 24px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.3),
+    transparent
+  );
+  color: white;
+}
+
+.hero-overlay h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.hero-meta span {
+  background: rgba(255,255,255,0.25);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.open {
+  background: #27ae60 !important;
+}
+
+.closed {
+  background: #e74c3c !important;
+}
+
+/* ===== MENU ===== */
+.menu-section {
+  padding: 24px;
+  background: #f8f9fb;
+}
+
+.menu-category {
+  margin-bottom: 30px;
+}
+
+.menu-category h3 {
+  margin-bottom: 14px;
+  font-size: 18px;
+  color: #333;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  margin-bottom: 12px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: 0.2s ease;
+}
+
+.menu-item:hover {
+  transform: translateY(-2px);
+}
+
+.menu-item h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.menu-item p {
+  margin: 5px 0 0;
+  color: #666;
+}
+
+.add-btn {
+  background: #ff6b00;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.add-btn:hover {
+  background: #e65c00;
+}

@@ -1,0 +1,92 @@
+/* ===== ADMIN PAGE ===== */
+.admin-page {
+  min-height: 100vh;
+  background: #f4f6f8;
+  padding: 30px;
+}
+
+/* ===== HEADER ===== */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 18px 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  margin-bottom: 30px;
+}
+
+.admin-header h2 {
+  margin: 0;
+}
+
+.admin-header button {
+  padding: 8px 16px;
+  border: none;
+  background: #e74c3c;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===== STATS ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.stat-card h3 {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.stat-card p {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* ===== ACTIONS ===== */
+.admin-actions {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.admin-actions button {
+  padding: 14px 26px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background: #2c3e50;
+  color: white;
+  cursor: pointer;
+}
+
+/* ===== MOBILE ===== */
+/* 📱 ADMIN DASHBOARD MOBILE */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .logout-btn {
+    width: 100%;
+  }
+}
+

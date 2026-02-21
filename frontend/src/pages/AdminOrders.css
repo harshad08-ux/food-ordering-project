@@ -1,0 +1,94 @@
+/* ===== PAGE ===== */
+.admin-orders-page {
+  padding: 30px;
+  background: #f4f6f8;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.admin-orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.admin-orders-header h2 {
+  margin: 0;
+}
+
+.admin-orders-header button {
+  padding: 8px 14px;
+  border: none;
+  background: #2c3e50;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===== TABLE ===== */
+.orders-table-wrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.orders-table th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+/* ===== ITEMS ===== */
+.order-item {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+/* ===== STATUS BADGES ===== */
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  background: #e74c3c;
+}
+
+.status.preparing {
+  background: #f39c12;
+}
+
+.status.delivered {
+  background: #2ecc71;
+}
+
+/* ===== SELECT ===== */
+select {
+  padding: 6px;
+  border-radius: 6px;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .orders-table th,
+  .orders-table td {
+    font-size: 13px;
+    padding: 10px;
+  }
+}

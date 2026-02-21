@@ -1,0 +1,22 @@
+.timeline {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  
+  .timeline-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    background: #e0e0e0;
+    color: #555;
+    text-transform: capitalize;
+    transition: all 0.3s ease;
+  }
+  
+  .timeline-badge.active {
+    background: #2ecc71;
+    color: #fff;
+    font-weight: bold;
+  }
+  
