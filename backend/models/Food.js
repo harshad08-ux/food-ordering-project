@@ -13,6 +13,9 @@ const foodSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    description: {
+      type: String,
+    },
     category: {
       type: String,
       required: true,
@@ -22,6 +25,11 @@ const foodSchema = new mongoose.Schema(
       ref: "Restaurant",
       required: true,   // 👈 VERY IMPORTANT
     },
+    isVeg: {
+      type: Boolean,
+      default: true
+    }
+   
   },
   { timestamps: true }
 );

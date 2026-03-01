@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminOrders from "./pages/AdminOrders";
 import AdminRoute from "./components/AdminRoute";
 import BottomNav from "./components/BottomNav";
+import OrderSuccess from "./pages/OrderSuccess";
 
 import "./App.css";
 
@@ -100,6 +101,7 @@ function App() {
             )
           }
         />
+        <Route path="/order-success" element={<OrderSuccess />} />
 
         {/* 📦 MY ORDERS */}
         <Route

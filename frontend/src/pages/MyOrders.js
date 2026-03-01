@@ -1,64 +1,104 @@
 import { useEffect, useState } from "react";
-import { myOrders } from "../api/orders";
-import { useNavigate } from "react-router-dom";
-import OrderStatusTimeline from "../components/OrderStatusTimeline";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import "./MyOrders.css";
 
 const MyOrders = () => {
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
-    myOrders()
-      .then((res) => {
-        setOrders(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Failed to load orders");
-        setLoading(false);
-      });
+    fetchOrders();
   }, []);
 
-  if (loading) return <p style={{ padding: "20px" }}>Loading orders...</p>;
-  if (error) return <p style={{ color: "red", padding: "20px" }}>{error}</p>;
+  const handleCancel = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/orders/${id}/cancel`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+  
+      fetchOrders(); // refresh list
+  
+    } catch (err) {
+      alert("Cannot cancel this order");
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/orders/my",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      setOrders(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
-    <div style={{ padding: "20px" }}>
-      {/* 🔙 HEADER */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
-        <button onClick={() => navigate(-1)}>← Back</button>
-        <button onClick={() => navigate("/home")}>🏠 Home</button>
-      </div>
-
-      <h2>My Orders 🧾</h2>
-
-      {orders.length === 0 && <p>No orders found</p>}
+    <div className="orders-page">
+      <h2 className="orders-title">📦 My Orders</h2>
 
       {orders.map((order) => (
-        <div
-          key={order._id}
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            padding: "12px",
-            marginBottom: "12px",
-          }}
-        >
-          <p><b>Order ID:</b> {order._id.slice(-6)}</p>
-          <p><b>Status:</b> {order.status}</p>
-          <p><b>Total:</b> ₹{order.totalPrice}</p>
+        <div className="order-card" key={order._id}>
 
-          <ul>
-            {order.items.map((item, i) => (
-              <li key={i}>
-                {item.food?.name || "Food"} × {item.quantity}
-              </li>
+          <div className="order-header">
+            <span>Order ID: {order._id.slice(-6)}</span>
+            <span className={`status-badge ${order.status}`}>
+              {order.status}
+            </span>
+          </div>
+
+          <div className="order-items">
+            {order.items.map((item, index) => (
+              <p key={index}>
+                {item.food?.name} × {item.quantity}
+              </p>
             ))}
-          </ul>
+          </div>
 
-          <OrderStatusTimeline status={order.status} />
+          <div className="order-footer">
+            <strong>Total: ₹{order.totalPrice}</strong>
+          </div>
+          {order.status === "pending" && (
+  <button
+    className="cancel-btn"
+    onClick={() => handleCancel(order._id)}
+  >
+    Cancel Order
+  </button>
+)}
+
+          {/* STATUS TRACKER */}
+          <div className="status-tracker">
+            <div className={order.status !== "pending" ? "active" : ""}>
+              Pending
+            </div>
+            <div className={
+              order.status === "preparing" || order.status === "delivered"
+                ? "active"
+                : ""
+            }>
+              Preparing
+            </div>
+            <div className={
+              order.status === "delivered" ? "active" : ""
+            }>
+              Delivered
+            </div>
+          </div>
+
         </div>
       ))}
     </div>

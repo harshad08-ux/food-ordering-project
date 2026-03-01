@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./AdminOrders.css";
 
 const AdminOrders = () => {
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchOrders();
@@ -13,14 +13,17 @@ const AdminOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        "http://localhost:5000/api/orders",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       setOrders(res.data);
-    } catch (error) {
-      console.error("Failed to load orders");
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -31,82 +34,62 @@ const AdminOrders = () => {
         { status },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         }
       );
       fetchOrders();
-    } catch (error) {
-      alert("Failed to update order status");
+    } catch (err) {
+      console.error(err);
     }
   };
 
   return (
     <div className="admin-orders-page">
-      <div className="admin-orders-header">
-        <h2>Manage Orders</h2>
-        <Link to="/admin/dashboard">
-          <button>← Back to Dashboard</button>
-        </Link>
-      </div>
+      <h2 className="admin-title">📋 Manage Orders</h2>
 
-      {orders.length === 0 ? (
-        <p>No orders found</p>
-      ) : (
-        <div className="orders-table-wrapper">
-          <table className="orders-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>User</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Update</th>
-              </tr>
-            </thead>
+      {orders.map((order) => (
+        <div className="admin-order-card" key={order._id}>
 
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>#{order._id.slice(-6)}</td>
+          <div className="admin-order-header">
+            <div>
+              <strong>Order ID:</strong> {order._id.slice(-6)}
+              <p className="customer-email">
+                {order.user?.email}
+              </p>
+            </div>
 
-                  <td>{order.user?.email || "User"}</td>
+            <span className={`status-badge ${order.status}`}>
+              {order.status}
+            </span>
+          </div>
 
-                  <td>
-                    {order.items.map((item, i) => (
-                      <div key={i} className="order-item">
-                        {item.food?.name} × {item.quantity}
-                      </div>
-                    ))}
-                  </td>
+          <div className="admin-order-items">
+            {order.items.map((item, index) => (
+              <p key={index}>
+                {item.food?.name} × {item.quantity}
+              </p>
+            ))}
+          </div>
 
-                  <td>₹{order.totalPrice}</td>
+          <div className="admin-order-footer">
+            <strong>Total: ₹{order.totalPrice}</strong>
 
-                  <td>
-                    <span className={`status ${order.status}`}>
-                      {order.status}
-                    </span>
-                  </td>
+            <select
+              value={order.status}
+              onChange={(e) =>
+                updateStatus(order._id, e.target.value)
+              }
+            >
+              <option value="pending">Pending</option>
+              <option value="preparing">Preparing</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
 
-                  <td>
-                    <select
-                      value={order.status}
-                      onChange={(e) =>
-                        updateStatus(order._id, e.target.value)
-                      }
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="preparing">Preparing</option>
-                      <option value="delivered">Delivered</option>
-                    </select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
-      )}
+      ))}
     </div>
   );
 };

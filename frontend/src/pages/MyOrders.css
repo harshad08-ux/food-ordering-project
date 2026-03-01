@@ -1,0 +1,88 @@
+.orders-page {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  .orders-title {
+    margin-bottom: 25px;
+  }
+  
+  .order-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.06);
+  }
+  
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-weight: 500;
+  }
+  
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+  
+  .status-badge.pending {
+    background: #ffe082;
+  }
+  
+  .status-badge.preparing {
+    background: #81d4fa;
+  }
+  
+  .status-badge.delivered {
+    background: #a5d6a7;
+  }
+  
+  .order-items {
+    margin-bottom: 15px;
+    color: #555;
+  }
+  
+  .order-footer {
+    margin-bottom: 15px;
+  }
+  
+  .status-tracker {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  
+  .status-tracker div {
+    flex: 1;
+    text-align: center;
+    padding: 6px 0;
+    border-radius: 6px;
+    background: #eee;
+    margin: 0 4px;
+  }
+  
+  .status-tracker .active {
+    background: #ff7a18;
+    color: white;
+  }.cancel-btn {
+    margin-top: 10px;
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  
+  .cancel-btn:hover {
+    background: #e60000;
+  }
+  .status-badge.cancelled {
+    background: #ef9a9a;
+  }

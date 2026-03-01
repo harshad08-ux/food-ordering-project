@@ -1,94 +1,70 @@
-/* ===== PAGE ===== */
 .admin-orders-page {
-  padding: 30px;
-  background: #f4f6f8;
-  min-height: 100vh;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
 }
 
-/* ===== HEADER ===== */
-.admin-orders-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.admin-title {
   margin-bottom: 25px;
 }
 
-.admin-orders-header h2 {
-  margin: 0;
-}
-
-.admin-orders-header button {
-  padding: 8px 14px;
-  border: none;
-  background: #2c3e50;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* ===== TABLE ===== */
-.orders-table-wrapper {
-  overflow-x: auto;
+.admin-order-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.06);
 }
 
-.orders-table {
-  width: 100%;
-  border-collapse: collapse;
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
 }
 
-.orders-table th,
-.orders-table td {
-  padding: 14px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.orders-table th {
-  background: #f9fafb;
-  font-weight: 600;
-}
-
-/* ===== ITEMS ===== */
-.order-item {
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-
-/* ===== STATUS BADGES ===== */
-.status {
-  padding: 6px 12px;
-  border-radius: 20px;
-  color: white;
+.customer-email {
   font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.admin-order-items {
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.admin-order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-order-footer select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* STATUS COLORS */
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
   text-transform: capitalize;
 }
 
-.status.pending {
-  background: #e74c3c;
+.status-badge.pending {
+  background: #ffe082;
 }
 
-.status.preparing {
-  background: #f39c12;
+.status-badge.preparing {
+  background: #81d4fa;
 }
 
-.status.delivered {
-  background: #2ecc71;
+.status-badge.delivered {
+  background: #a5d6a7;
 }
 
-/* ===== SELECT ===== */
-select {
-  padding: 6px;
-  border-radius: 6px;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 768px) {
-  .orders-table th,
-  .orders-table td {
-    font-size: 13px;
-    padding: 10px;
-  }
-}
+.status-badge.cancelled {
+  background: #ef9a9a;
+}   
