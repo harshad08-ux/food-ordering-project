@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
 import Login from "./pages/Login";
@@ -10,9 +10,10 @@ import MyOrders from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminOrders from "./pages/AdminOrders";
 import AdminRoute from "./components/AdminRoute";
+
 import BottomNav from "./components/BottomNav";
 import OrderSuccess from "./pages/OrderSuccess";
-
+import OwnerDashboard from "./pages/OwnerDashboard";
 import "./App.css";
 
 function App() {
@@ -27,47 +28,47 @@ function App() {
 
         {/* 🔁 ROOT DECISION */}
         <Route
-          path="/"
-          element={
-            !token ? (
-              <Navigate to="/login" replace />
-            ) : role === "admin" ? (
-              <Navigate to="/admin/dashboard" replace />
-            ) : (
-              <Navigate to="/home" replace />
-            )
-          }
-        />
+  path="/"
+  element={
+    !token ? (
+      <Navigate to="/login" replace />
+    ) : role === "admin" ? (
+      <Navigate to="/admin/dashboard" replace />
+    ) : role === "owner" ? (
+      <Navigate to="/owner/dashboard" replace />
+    ) : (
+      <Navigate to="/home" replace />
+    )
+  }
+/>
 
         {/* 🔐 AUTH */}
         <Route
           path="/login"
           element={!token ? <Login /> : <Navigate to="/" replace />}
         />
+
         <Route
           path="/register"
           element={!token ? <Register /> : <Navigate to="/" replace />}
         />
 
-        {/* 👤 USER HOME → RESTAURANTS */}
+        {/* 👤 USER HOME */}
         <Route
           path="/home"
           element={
             token && role === "user" ? (
               <>
-                {/* TOP BAR */}
                 <header className="navbar">
                   <h1>Food Ordering App 🍔</h1>
                   <button onClick={logout}>Logout</button>
                 </header>
 
                 <Restaurants />
-
-                {/* 🔥 MOBILE BOTTOM NAV */}
                 <BottomNav />
               </>
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to="/" replace />
             )
           }
         />
@@ -82,7 +83,7 @@ function App() {
                 <BottomNav />
               </>
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to="/" replace />
             )
           }
         />
@@ -97,11 +98,10 @@ function App() {
                 <BottomNav />
               </>
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to="/" replace />
             )
           }
         />
-        <Route path="/order-success" element={<OrderSuccess />} />
 
         {/* 📦 MY ORDERS */}
         <Route
@@ -113,12 +113,20 @@ function App() {
                 <BottomNav />
               </>
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to="/" replace />
             )
           }
         />
 
-        {/* 🛠 ADMIN ROUTES */}
+        {/* 🎉 ORDER SUCCESS */}
+        <Route
+          path="/order-success"
+          element={
+            token ? <OrderSuccess /> : <Navigate to="/" replace />
+          }
+        />
+
+        {/* 👑 ADMIN ROUTES */}
         <Route
           path="/admin/dashboard"
           element={
@@ -136,6 +144,18 @@ function App() {
             </AdminRoute>
           }
         />
+
+     
+        <Route
+  path="/owner/dashboard"
+  element={
+    token && role === "owner" ? (
+      <OwnerDashboard />
+    ) : (
+      <Navigate to="/login" replace />
+    )
+  }
+/>
 
         {/* ❌ FALLBACK */}
         <Route path="*" element={<Navigate to="/" replace />} />
