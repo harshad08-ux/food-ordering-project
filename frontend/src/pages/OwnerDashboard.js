@@ -77,7 +77,7 @@ const OwnerDashboard = () => {
         <div style={{ marginTop: "20px" }}>
           <button
             onClick={() =>
-              navigate(`/owner/menu/${restaurant._id}`)
+              navigate("/owner/menu")
             }
             style={{ marginRight: "10px" }}
           >

@@ -10,7 +10,7 @@ import MyOrders from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminOrders from "./pages/AdminOrders";
 import AdminRoute from "./components/AdminRoute";
-
+import OwnerMenu from "./pages/OwnerMenu";
 import BottomNav from "./components/BottomNav";
 import OrderSuccess from "./pages/OrderSuccess";
 import OwnerDashboard from "./pages/OwnerDashboard";
@@ -156,6 +156,18 @@ function App() {
     )
   }
 />
+<Route
+  path="/owner/menu"
+  element={
+    token && role === "owner" ? (
+      <OwnerMenu />
+    ) : (
+      <Navigate to="/login" replace />
+    )
+  }
+/>
+
+
 
         {/* ❌ FALLBACK */}
         <Route path="*" element={<Navigate to="/" replace />} />
