@@ -2,93 +2,83 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "./OwnerDashboard.css";
 
 const OwnerDashboard = () => {
+
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [restaurant, setRestaurant] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  const [stats, setStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0
+  });
 
   useEffect(() => {
-    const fetchRestaurant = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/api/restaurants/owner/my",
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+
+      const res = await axios.get(
+        "http://localhost:5000/api/orders/owner/stats",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
           }
-        );
+        }
+      );
 
-        setRestaurant(res.data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setStats(res.data);
 
-    if (user?.token) {
-      fetchRestaurant();
+    } catch (err) {
+      console.log(err);
     }
-  }, [user?.token]);
-
-  if (loading) {
-    return <h2 style={{ padding: "40px" }}>Loading...</h2>;
-  }
-
-  if (!restaurant) {
-    return (
-      <div style={{ padding: "40px" }}>
-        <h2>No restaurant found</h2>
-      </div>
-    );
-  }
+  };
 
   return (
-    <div style={{ padding: "40px" }}>
-      {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "30px",
-        }}
-      >
-        <h1>🏪 Owner Dashboard</h1>
-        <button onClick={logout}>Logout</button>
-      </div>
+    <div className="owner-dashboard">
 
-      {/* Restaurant Card */}
-      <div
-        style={{
-          background: "#fff",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2>{restaurant.name}</h2>
-        <p>{restaurant.address}</p>
-        <p>Cuisine: {restaurant.cuisine}</p>
+      {/* 🔥 NAVBAR */}
+      <div className="owner-navbar">
 
-        <div style={{ marginTop: "20px" }}>
-          <button
-            onClick={() =>
-              navigate("/owner/menu")
-            }
-            style={{ marginRight: "10px" }}
-          >
-            Manage Menu
+        <h2>🍔 Owner Panel</h2>
+
+        <div className="nav-buttons">
+
+          <button onClick={() => navigate("/owner/menu")}>
+            Menu
           </button>
 
           <button onClick={() => navigate("/owner/orders")}>
-            View Orders
+            Orders
           </button>
+
+          <button className="logout" onClick={logout}>
+            Logout
+          </button>
+
         </div>
+
       </div>
+
+      <h1>📊 Restaurant Dashboard</h1>
+
+      <div className="dashboard-cards">
+
+        <div className="card">
+          <h3>Total Orders</h3>
+          <p>{stats.totalOrders}</p>
+        </div>
+
+        <div className="card revenue">
+          <h3>Total Revenue</h3>
+          <p>₹{stats.totalRevenue}</p>
+        </div>
+
+      </div>
+
     </div>
   );
 };

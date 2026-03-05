@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-
+import OwnerOrders from "./pages/OwnerOrders";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Restaurants from "./pages/Restaurants";
@@ -164,6 +164,15 @@ function App() {
     ) : (
       <Navigate to="/login" replace />
     )
+  }
+/>
+
+<Route
+  path="/owner/orders"
+  element={
+    token && role === "owner"
+      ? <OwnerOrders />
+      : <Navigate to="/login" replace />
   }
 />
 

@@ -125,5 +125,60 @@ router.delete("/:id", authMiddleware, ownerMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// ✏️ UPDATE FOOD (OWNER ONLY)
+router.put("/:id", authMiddleware, ownerMiddleware, async (req, res) => {
+  try {
+    const food = await Food.findById(req.params.id).populate("restaurant");
+
+    if (!food) {
+      return res.status(404).json({ message: "Food not found" });
+    }
+
+    // Ensure owner owns this restaurant
+    if (food.restaurant.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const { name, price, category, image, description, isVeg } = req.body;
+
+    food.name = name ?? food.name;
+    food.price = price ?? food.price;
+    food.category = category ?? food.category;
+    food.image = image ?? food.image;
+    food.description = description ?? food.description;
+    food.isVeg = isVeg ?? food.isVeg;
+
+    const updatedFood = await food.save();
+
+    res.json(updatedFood);
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+// OWNER: TOGGLE FOOD AVAILABILITY
+router.put("/:id/toggle", authMiddleware, ownerMiddleware, async (req, res) => {
+  try {
+
+    const food = await Food.findById(req.params.id).populate("restaurant");
+
+    if (!food) {
+      return res.status(404).json({ message: "Food not found" });
+    }
+
+    if (food.restaurant.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    food.isAvailable = !food.isAvailable;
+
+    await food.save();
+
+    res.json(food);
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;

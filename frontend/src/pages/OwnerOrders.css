@@ -1,0 +1,168 @@
+.owner-orders {
+  padding: 40px;
+  background: #f7f8fc;
+  min-height: 100vh;
+}
+
+.owner-orders h1 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* ORDER CARD */
+
+.order-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: 0.2s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-header h3 {
+  margin: 0;
+}
+
+/* STATUS BADGES */
+
+.status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+/* Pending */
+
+.status.pending {
+  background: #ffe0b2;
+  color: #e65100;
+}
+
+/* Accepted */
+
+.status.accepted {
+  background: #bbdefb;
+  color: #0d47a1;
+}
+
+/* Preparing */
+
+.status.preparing {
+  background: #e1bee7;
+  color: #6a1b9a;
+}
+
+/* Out for Delivery */
+
+.status.out_for_delivery {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Delivered */
+
+.status.delivered {
+  background: #c8e6c9;
+  color: #1b5e20;
+}
+
+/* CUSTOMER */
+
+.customer {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* ITEMS */
+
+.items {
+  margin: 15px 0;
+}
+
+.items p {
+  margin: 4px 0;
+}
+
+/* PRICE */
+
+.price {
+  font-weight: bold;
+  color: #ff6b00;
+  margin-bottom: 5px;
+}
+
+/* TIME */
+
+.time {
+  font-size: 12px;
+  color: #999;
+}
+
+/* ACTION BUTTONS */
+
+.actions {
+  margin-top: 15px;
+}
+
+.actions button {
+  margin-right: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+/* Accept */
+
+.actions button:nth-child(1) {
+  background: #2196f3;
+  color: white;
+}
+
+/* Preparing */
+
+.actions button:nth-child(2) {
+  background: #ff9800;
+  color: white;
+}
+
+/* Out for Delivery */
+
+.actions button:nth-child(3) {
+  background: #673ab7;
+  color: white;
+}
+
+/* Delivered */
+
+.actions button:nth-child(4) {
+  background: #4caf50;
+  color: white;
+}
+
+/* Disabled */
+
+.actions button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
