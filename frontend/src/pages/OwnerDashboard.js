@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Bar } from "react-chartjs-2";
+import { io } from "socket.io-client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "chart.js/auto";
 import "./OwnerDashboard.css";
+
+const socket = io("http://localhost:5000");
 
 const OwnerDashboard = () => {
 
@@ -14,11 +21,34 @@ const OwnerDashboard = () => {
     totalRevenue: 0
   });
 
+  const [weeklyRevenue, setWeeklyRevenue] = useState([]);
+  const [topFoods, setTopFoods] = useState([]);
+
   useEffect(() => {
+
     fetchStats();
+    fetchWeeklyRevenue();
+    fetchTopFoods();
+
+    // 🔔 REALTIME ORDER NOTIFICATION
+    socket.on("new_order", (order) => {
+
+      toast.success(`🔔 New Order Received! ₹${order.totalPrice}`);
+
+      fetchStats();
+      fetchWeeklyRevenue();
+      fetchTopFoods();
+
+    });
+
+    return () => {
+      socket.off("new_order");
+    };
+
   }, []);
 
   const fetchStats = async () => {
+
     try {
 
       const res = await axios.get(
@@ -35,12 +65,89 @@ const OwnerDashboard = () => {
     } catch (err) {
       console.log(err);
     }
+
+  };
+
+  const fetchWeeklyRevenue = async () => {
+
+    try {
+
+      const res = await axios.get(
+        "http://localhost:5000/api/orders/owner/weekly-revenue",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
+
+      setWeeklyRevenue(Object.values(res.data));
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  };
+
+  const fetchTopFoods = async () => {
+
+    try {
+
+      const res = await axios.get(
+        "http://localhost:5000/api/orders/owner/top-foods",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
+
+      setTopFoods(res.data);
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  };
+
+  const performanceChart = {
+    labels: ["Orders", "Revenue"],
+    datasets: [
+      {
+        label: "Restaurant Performance",
+        data: [stats.totalOrders, stats.totalRevenue],
+        backgroundColor: ["#ff6b00", "#4caf50"]
+      }
+    ]
+  };
+
+  const weeklyChart = {
+    labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    datasets: [
+      {
+        label: "Weekly Revenue",
+        data: weeklyRevenue,
+        backgroundColor: "#ff6b00"
+      }
+    ]
+  };
+
+  const topFoodChart = {
+    labels: topFoods.map(f => f.name),
+    datasets: [
+      {
+        label: "Top Selling Foods",
+        data: topFoods.map(f => f.total),
+        backgroundColor: "#ff6b00"
+      }
+    ]
   };
 
   return (
     <div className="owner-dashboard">
 
-      {/* 🔥 NAVBAR */}
+      {/* NAVBAR */}
+
       <div className="owner-navbar">
 
         <h2>🍔 Owner Panel</h2>
@@ -63,7 +170,9 @@ const OwnerDashboard = () => {
 
       </div>
 
-      <h1>📊 Restaurant Dashboard</h1>
+      <h1 className="dashboard-title">📊 Restaurant Dashboard</h1>
+
+      {/* STATS CARDS */}
 
       <div className="dashboard-cards">
 
@@ -78,6 +187,57 @@ const OwnerDashboard = () => {
         </div>
 
       </div>
+
+      {/* CHART GRID */}
+
+      <div className="charts-grid">
+
+        <div className="chart-container">
+          <h3>📈 Performance Overview</h3>
+
+          <Bar
+            data={performanceChart}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false
+            }}
+          />
+
+        </div>
+
+        <div className="chart-container">
+
+          <h3>📅 Weekly Revenue</h3>
+
+          <Bar
+            data={weeklyChart}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false
+            }}
+          />
+
+        </div>
+
+        <div className="chart-container">
+
+          <h3>🔥 Top Selling Foods</h3>
+
+          <Bar
+            data={topFoodChart}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false
+            }}
+          />
+
+        </div>
+
+      </div>
+
+      {/* TOAST NOTIFICATION CONTAINER */}
+
+      <ToastContainer position="top-right" autoClose={3000} />
 
     </div>
   );

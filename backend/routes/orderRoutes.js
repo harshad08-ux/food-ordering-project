@@ -21,7 +21,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
     const order = new Order({
       user: req.user.id,
-      items: items.map((item) => ({
+      items: items.map(item => ({
         food: item.food,
         quantity: item.quantity
       })),
@@ -31,11 +31,21 @@ router.post("/", authMiddleware, async (req, res) => {
 
     const savedOrder = await order.save();
 
+    // 🔔 SOCKET EVENT
+    const io = req.app.get("io");
+    io.emit("new_order", savedOrder);
+
+    // ✅ SEND RESPONSE ONLY ONCE
     res.status(201).json(savedOrder);
 
   } catch (error) {
+
     console.error("Create order error:", error);
-    res.status(500).json({ message: "Server error" });
+
+    res.status(500).json({
+      message: "Server error"
+    });
+
   }
 });
 
@@ -144,6 +154,107 @@ router.get("/owner/stats", authMiddleware, ownerMiddleware, async (req, res) => 
   }
 });
 
+
+// OWNER WEEKLY REVENUE
+router.get("/owner/weekly-revenue", authMiddleware, ownerMiddleware, async (req, res) => {
+  try {
+
+    const restaurant = await Restaurant.findOne({ owner: req.user.id });
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    const foods = await Food.find({ restaurant: restaurant._id });
+    const foodIds = foods.map(f => f._id);
+
+    const orders = await Order.find({
+      "items.food": { $in: foodIds },
+      status: "delivered"
+    });
+
+    const week = {
+      Mon: 0,
+      Tue: 0,
+      Wed: 0,
+      Thu: 0,
+      Fri: 0,
+      Sat: 0,
+      Sun: 0
+    };
+
+    orders.forEach(order => {
+
+      const day = new Date(order.createdAt).toLocaleDateString("en-US", {
+        weekday: "short"
+      });
+
+      if (week[day] !== undefined) {
+        week[day] += order.totalPrice;
+      }
+
+    });
+
+    res.json(week);
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// OWNER TOP SELLING FOODS
+router.get("/owner/top-foods", authMiddleware, ownerMiddleware, async (req, res) => {
+
+  try {
+
+    const restaurant = await Restaurant.findOne({ owner: req.user.id });
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    const foods = await Food.find({ restaurant: restaurant._id });
+
+    const foodIds = foods.map(f => f._id);
+
+    const orders = await Order.find({
+      "items.food": { $in: foodIds },
+      status: "delivered"
+    }).populate("items.food", "name");
+
+    const foodStats = {};
+
+    orders.forEach(order => {
+
+      order.items.forEach(item => {
+
+        const name = item.food?.name;
+
+        if (!foodStats[name]) {
+          foodStats[name] = 0;
+        }
+
+        foodStats[name] += item.quantity;
+
+      });
+
+    });
+
+    const result = Object.keys(foodStats).map(food => ({
+      name: food,
+      total: foodStats[food]
+    }));
+
+    result.sort((a, b) => b.total - a.total);
+
+    res.json(result.slice(0, 5));
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+
+});
 
 // ================= UPDATE ORDER STATUS =================
 
