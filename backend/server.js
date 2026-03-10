@@ -52,6 +52,9 @@ app.use("/api/orders", orderRoutes);
 const restaurantRoutes = require("./routes/restaurantRoutes");
 app.use("/api/restaurants", restaurantRoutes);
 
+const reviewRoutes = require("./routes/reviewRoutes");
+app.use("/api/reviews", reviewRoutes);
+
 // Test route
 app.get("/", (req, res) => {
   res.send("Backend is running successfully 🚀");

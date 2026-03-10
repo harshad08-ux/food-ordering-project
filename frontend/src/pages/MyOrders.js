@@ -7,28 +7,14 @@ const MyOrders = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
 
+  const [showReview, setShowReview] = useState(false);
+  const [selectedFood, setSelectedFood] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
   useEffect(() => {
     fetchOrders();
   }, []);
-
-  const handleCancel = async (id) => {
-    try {
-      await axios.put(
-        `http://localhost:5000/api/orders/${id}/cancel`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-  
-      fetchOrders(); // refresh list
-  
-    } catch (err) {
-      alert("Cannot cancel this order");
-    }
-  };
 
   const fetchOrders = async () => {
     try {
@@ -40,67 +26,208 @@ const MyOrders = () => {
           },
         }
       );
+
       setOrders(res.data);
+
     } catch (err) {
       console.error(err);
     }
   };
 
+  const handleCancel = async (id) => {
+    try {
+
+      await axios.put(
+        `http://localhost:5000/api/orders/${id}/cancel`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      fetchOrders();
+
+    } catch (err) {
+      alert("Cannot cancel this order");
+    }
+  };
+
+  // ⭐ OPEN REVIEW
+  const openReview = (foodId) => {
+    setSelectedFood(foodId);
+    setShowReview(true);
+  };
+
+  // ⭐ SUBMIT REVIEW
+  const submitReview = async () => {
+    try {
+
+      await axios.post(
+        "http://localhost:5000/api/reviews",
+        {
+          foodId: selectedFood,
+          rating,
+          comment
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
+
+      alert("Review submitted!");
+
+      setShowReview(false);
+      setRating(0);
+      setComment("");
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="orders-page">
+
       <h2 className="orders-title">📦 My Orders</h2>
 
       {orders.map((order) => (
+
         <div className="order-card" key={order._id}>
 
           <div className="order-header">
             <span>Order ID: {order._id.slice(-6)}</span>
+
             <span className={`status-badge ${order.status}`}>
               {order.status}
             </span>
           </div>
 
+          {/* ITEMS */}
           <div className="order-items">
-            {order.items.map((item, index) => (
-              <p key={index}>
-                {item.food?.name} × {item.quantity}
-              </p>
-            ))}
-          </div>
+  {order.items.map((item, index) => (
+
+    <div key={index} className="order-item">
+
+      <p>
+        {item.food?.name || "Food unavailable"} × {item.quantity}
+      </p>
+
+      {order.status === "delivered" && item.food && (
+        <button
+          className="rate-btn"
+          onClick={() => openReview(item.food._id)}
+        >
+          ⭐ Rate
+        </button>
+      )}
+
+    </div>
+
+  ))}
+</div>
 
           <div className="order-footer">
             <strong>Total: ₹{order.totalPrice}</strong>
           </div>
+
+          {/* CANCEL BUTTON */}
           {order.status === "pending" && (
-  <button
-    className="cancel-btn"
-    onClick={() => handleCancel(order._id)}
-  >
-    Cancel Order
-  </button>
-)}
+
+            <button
+              className="cancel-btn"
+              onClick={() => handleCancel(order._id)}
+            >
+              Cancel Order
+            </button>
+
+          )}
 
           {/* STATUS TRACKER */}
           <div className="status-tracker">
+
             <div className={order.status !== "pending" ? "active" : ""}>
               Pending
             </div>
-            <div className={
-              order.status === "preparing" || order.status === "delivered"
-                ? "active"
-                : ""
-            }>
+
+            <div
+              className={
+                order.status === "preparing" ||
+                order.status === "out_for_delivery" ||
+                order.status === "delivered"
+                  ? "active"
+                  : ""
+              }
+            >
               Preparing
             </div>
-            <div className={
-              order.status === "delivered" ? "active" : ""
-            }>
+
+            <div className={order.status === "delivered" ? "active" : ""}>
               Delivered
             </div>
+
           </div>
 
         </div>
+
       ))}
+
+      {/* ⭐ REVIEW MODAL */}
+
+      {showReview && (
+
+        <div className="review-modal">
+
+          <div className="review-box">
+
+            <h3>Rate this food</h3>
+
+            <div className="stars">
+
+              {[1,2,3,4,5].map((star) => (
+
+                <span
+                  key={star}
+                  onClick={() => setRating(star)}
+                  style={{
+                    cursor: "pointer",
+                    fontSize: "28px",
+                    color: star <= rating ? "orange" : "gray"
+                  }}
+                >
+                  ★
+                </span>
+
+              ))}
+
+            </div>
+
+            <textarea
+              placeholder="Write review..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+
+            <button onClick={submitReview}>
+              Submit Review
+            </button>
+
+            <button
+              className="cancel-review"
+              onClick={() => setShowReview(false)}
+            >
+              Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
+
     </div>
   );
 };
