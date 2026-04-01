@@ -86,3 +86,88 @@
   .status-badge.cancelled {
     background: #ef9a9a;
   }
+  .review-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .review-modal {
+    width: 420px;
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    animation: popIn 0.25s ease;
+  }
+  
+  .review-modal h3 {
+    margin-bottom: 20px;
+    color: #1f2937;
+  }
+  
+  .stars {
+    display: flex;
+    gap: 10px;
+    font-size: 34px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .stars span {
+    color: #d1d5db;
+  }
+  
+  .stars .active-star {
+    color: #f59e0b;
+  }
+  
+  .review-modal textarea {
+    width: 100%;
+    min-height: 110px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+    outline: none;
+    resize: none;
+    margin-bottom: 20px;
+  }
+  
+  .review-actions {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .review-actions button {
+    flex: 1;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    background: #ff6b00;
+    color: white;
+  }
+  
+  .cancel-review {
+    background: #e5e7eb !important;
+    color: #111827 !important;
+  }
+  
+  @keyframes popIn {
+    from {
+      transform: scale(0.85);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }

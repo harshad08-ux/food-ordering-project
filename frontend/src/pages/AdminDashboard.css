@@ -1,92 +1,112 @@
-/* ===== ADMIN PAGE ===== */
-.admin-page {
+.admin-dashboard {
   min-height: 100vh;
   background: #f4f6f8;
   padding: 30px;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff;
-  padding: 18px 25px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   margin-bottom: 30px;
 }
 
-.admin-header h2 {
-  margin: 0;
+.admin-header h1 {
+  font-size: 42px;
+  color: #1f3b57;
 }
 
 .admin-header button {
-  padding: 8px 16px;
-  border: none;
-  background: #e74c3c;
+  background: #ff5a4d;
   color: white;
-  border-radius: 6px;
+  border: none;
+  padding: 14px 26px;
+  border-radius: 10px;
+  font-size: 18px;
   cursor: pointer;
 }
 
-/* ===== STATS ===== */
-.stats-grid {
+/* STATS GRID */
+.dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-bottom: 50px;
 }
 
 .stat-card {
   background: white;
-  padding: 25px;
-  border-radius: 14px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
 .stat-card h3 {
-  margin-bottom: 10px;
-  color: #555;
+  font-size: 28px;
+  color: #444;
+  margin-bottom: 20px;
 }
 
 .stat-card p {
-  font-size: 32px;
+  font-size: 48px;
   font-weight: bold;
-  margin: 0;
+  color: #1f3b57;
 }
 
-/* ===== ACTIONS ===== */
-.admin-actions {
-  margin-top: 40px;
-  text-align: center;
+/* VENDOR SECTION */
+.vendor-section {
+  margin-top: 30px;
 }
 
-.admin-actions button {
-  padding: 14px 26px;
-  font-size: 16px;
-  border-radius: 8px;
+.vendor-section h2 {
+  font-size: 34px;
+  color: #1f3b57;
+  margin-bottom: 25px;
+}
+
+.vendor-card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.vendor-card h3 {
+  font-size: 26px;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.vendor-card p {
+  color: #666;
+  margin: 4px 0;
+}
+
+.vendor-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.approve-btn,
+.reject-btn {
   border: none;
-  background: #2c3e50;
-  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
   cursor: pointer;
+  color: white;
 }
 
-/* ===== MOBILE ===== */
-/* 📱 ADMIN DASHBOARD MOBILE */
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-header {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
-  }
-
-  .logout-btn {
-    width: 100%;
-  }
+.approve-btn {
+  background: #28a745;
 }
 
+.reject-btn {
+  background: #dc3545;
+}

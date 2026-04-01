@@ -36,21 +36,37 @@ router.get("/restaurant/:id", async (req, res) => {
 });
 
     // OWNER: GET MY RESTAURANT FOODS
-router.get("/owner/my", authMiddleware, ownerMiddleware, async (req, res) => {
-  try {
-    const restaurant = await Restaurant.findOne({ owner: req.user.id });
-
-    if (!restaurant) {
-      return res.status(404).json({ message: "Restaurant not found" });
-    }
-
-    const foods = await Food.find({ restaurant: restaurant._id });
-
-    res.json(foods);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
-});
+    router.get("/owner/my", authMiddleware, ownerMiddleware, async (req, res) => {
+      try {
+        const restaurant = await Restaurant.findOne({
+          owner: req.user.id
+        });
+    
+        if (!restaurant) {
+          return res.status(404).json({
+            message: "Restaurant not found"
+          });
+        }
+    
+        // ✅ BLOCK IF NOT APPROVED
+        if (restaurant.approvalStatus !== "approved") {
+          return res.status(403).json({
+            message: "Restaurant pending admin approval"
+          });
+        }
+    
+        const foods = await Food.find({
+          restaurant: restaurant._id
+        });
+    
+        res.json(foods);
+    
+      } catch (error) {
+        res.status(500).json({
+          message: "Server error"
+        });
+      }
+    });
 
 
 // ==============================

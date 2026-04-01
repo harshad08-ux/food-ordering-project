@@ -1,88 +1,148 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // ✅ ADD THIS
+import { useAuth } from "../context/AuthContext";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
+  const { user, logout } = useAuth();
+
   const [stats, setStats] = useState({
-    total: 0,
+    totalOrders: 0,
     pending: 0,
     preparing: 0,
-    delivered: 0,
+    delivered: 0
   });
 
-  const navigate = useNavigate();
-  const { logout } = useAuth(); // ✅ USE CONTEXT
-  const token = localStorage.getItem("token");
+  const [vendors, setVendors] = useState([]);
 
   useEffect(() => {
-    fetchDashboardStats();
-    // eslint-disable-next-line
+    fetchStats();
+    fetchPendingVendors();
   }, []);
 
-  const fetchDashboardStats = async () => {
+  const fetchStats = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        "http://localhost:5000/api/orders/admin/stats",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
 
-      const orders = res.data;
+      setStats(res.data);
 
-      setStats({
-        total: orders.length,
-        pending: orders.filter(o => o.status === "pending").length,
-        preparing: orders.filter(o => o.status === "preparing").length,
-        delivered: orders.filter(o => o.status === "delivered").length,
-      });
-    } catch (error) {
-      console.error("Failed to fetch admin dashboard stats", error);
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  // ✅ FIXED LOGOUT (IMPORTANT)
-  const handleLogout = () => {
-    logout();                 // clears context + localStorage
-    navigate("/login", { replace: true }); // clean redirect
+  const fetchPendingVendors = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/restaurants/pending",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
+
+      setVendors(res.data);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updateVendorStatus = async (id, status) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/restaurants/${id}/approve`,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      );
+
+      fetchPendingVendors();
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <div className="admin-dashboard">
+
       <div className="admin-header">
-        <h1>Admin Dashboard</h1>
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
+        <h1>🛠 Admin Dashboard</h1>
+        <button onClick={logout}>Logout</button>
       </div>
 
-      <div className="stats-grid">
+      {/* ANALYTICS */}
+      <div className="dashboard-stats">
         <div className="stat-card">
           <h3>Total Orders</h3>
-          <p>{stats.total}</p>
+          <p>{stats.totalOrders}</p>
         </div>
 
-        <div className="stat-card pending">
+        <div className="stat-card">
           <h3>Pending</h3>
           <p>{stats.pending}</p>
         </div>
 
-        <div className="stat-card preparing">
+        <div className="stat-card">
           <h3>Preparing</h3>
           <p>{stats.preparing}</p>
         </div>
 
-        <div className="stat-card delivered">
+        <div className="stat-card">
           <h3>Delivered</h3>
           <p>{stats.delivered}</p>
         </div>
       </div>
 
-      <div className="admin-actions">
-        <button onClick={() => navigate("/admin/orders")}>
-          Manage Orders →
-        </button>
+      {/* VENDOR APPROVAL */}
+      <div className="vendor-section">
+        <h2>🏪 Pending Vendor Approvals</h2>
+
+        {vendors.length === 0 ? (
+          <p>No pending vendors</p>
+        ) : (
+          vendors.map((vendor) => (
+            <div className="vendor-card" key={vendor._id}>
+              <div>
+                <h3>{vendor.name}</h3>
+                <p>{vendor.owner?.email}</p>
+                <p>{vendor.address}</p>
+              </div>
+
+              <div className="vendor-actions">
+                <button
+                  className="approve-btn"
+                  onClick={() =>
+                    updateVendorStatus(vendor._id, "approved")
+                  }
+                >
+                  Approve
+                </button>
+
+                <button
+                  className="reject-btn"
+                  onClick={() =>
+                    updateVendorStatus(vendor._id, "rejected")
+                  }
+                >
+                  Reject
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

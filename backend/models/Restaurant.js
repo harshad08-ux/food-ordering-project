@@ -30,6 +30,11 @@ const restaurantSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    approvalStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending"
+    },
   },
   { timestamps: true }
 );
