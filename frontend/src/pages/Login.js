@@ -1,76 +1,100 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Login.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    role: "user" // UI only
+  });
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
 
     try {
+      // ✅ send only email + password
       const res = await axios.post(
         "http://localhost:5000/api/auth/login",
-        { email, password }
+        {
+          email: form.email,
+          password: form.password
+        }
       );
 
-      const { token, user } = res.data;
+      // ✅ save auth
+      login(res.data);
 
-      // ✅ SAVE AUTH STATE (IMPORTANT)
-      login(token, user.role);
+      // ✅ role comes from DB response
+      const role = res.data.user.role;
 
-      // ✅ REDIRECT BASED ON ROLE
-      if (user.role === "admin") {
-        navigate("/admin/dashboard", { replace: true });
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (role === "owner") {
+        navigate("/owner/dashboard");
       } else {
-        navigate("/home", { replace: true });
+        navigate("/home");
       }
-    } catch (err) {
-      setError("Invalid email or password");
-    } finally {
-      setLoading(false);
+
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+        "Invalid email or password"
+      );
     }
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-page">
       <div className="auth-card">
-        <h2>Welcome Back 👋</h2>
-        <p className="subtitle">Login to continue</p>
-
-        {error && <p className="error">{error}</p>}
+        <h1>🍕 Welcome Back</h1>
+        <p>Login to continue your food journey</p>
 
         <form onSubmit={handleLogin}>
           <input
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={form.email}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
             required
           />
 
           <input
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={form.password}
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
             required
           />
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
+          {/* UI only role selector */}
+          <select
+            value={form.role}
+            onChange={(e) =>
+              setForm({ ...form, role: e.target.value })
+            }
+          >
+            <option value="user">👤 Customer</option>
+            <option value="owner">🍔 Restaurant Owner</option>
+            <option value="admin">🛠 Admin</option>
+          </select>
+
+          <button type="submit">Login</button>
         </form>
+
+        <p className="switch-auth">
+          Don’t have an account?{" "}
+          <Link to="/register">Register</Link>
+        </p>
       </div>
     </div>
   );

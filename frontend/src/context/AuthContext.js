@@ -6,26 +6,31 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Sync with localStorage on app start
+  // restore login
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
+    const savedUser = localStorage.getItem("user");
 
-    if (token && role) {
-      setUser({ token, role });
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
     }
 
     setLoading(false);
   }, []);
 
-  const login = (token, role) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("role", role);
-    setUser({ token, role });
+  // new login format
+  const login = (data) => {
+    const authData = {
+      token: data.token,
+      role: data.user.role,
+      user: data.user
+    };
+
+    localStorage.setItem("user", JSON.stringify(authData));
+    setUser(authData);
   };
 
   const logout = () => {
-    localStorage.clear();
+    localStorage.removeItem("user");
     setUser(null);
   };
 
