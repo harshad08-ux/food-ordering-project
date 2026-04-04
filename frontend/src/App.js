@@ -12,6 +12,9 @@ import AdminOrders from "./pages/AdminOrders";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import OwnerMenu from "./pages/OwnerMenu";
 import OwnerOrders from "./pages/OwnerOrders";
+import OwnerCreateRestaurant from "./pages/OwnerCreateRestaurant";
+import OwnerPendingApproval from "./pages/OwnerPendingApproval";
+import OwnerEntryRedirect from "./pages/OwnerEntryRedirect";
 import OrderSuccess from "./pages/OrderSuccess";
 
 import AdminRoute from "./components/AdminRoute";
@@ -28,7 +31,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* ROOT */}
         <Route
           path="/"
@@ -38,7 +40,7 @@ function App() {
             ) : role === "admin" ? (
               <Navigate to="/admin/dashboard" replace />
             ) : role === "owner" ? (
-              <Navigate to="/owner/dashboard" replace />
+              <OwnerEntryRedirect />
             ) : (
               <Navigate to="/home" replace />
             )
@@ -54,7 +56,7 @@ function App() {
             ) : role === "admin" ? (
               <Navigate to="/admin/dashboard" replace />
             ) : role === "owner" ? (
-              <Navigate to="/owner/dashboard" replace />
+              <OwnerEntryRedirect />
             ) : (
               <Navigate to="/home" replace />
             )
@@ -66,7 +68,7 @@ function App() {
           element={!token ? <Register /> : <Navigate to="/" replace />}
         />
 
-        {/* USER ROUTES */}
+        {/* USER */}
         <Route
           path="/home"
           element={
@@ -153,6 +155,28 @@ function App() {
 
         {/* OWNER */}
         <Route
+          path="/owner/create-restaurant"
+          element={
+            token && role === "owner" ? (
+              <OwnerCreateRestaurant />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/owner/pending-approval"
+          element={
+            token && role === "owner" ? (
+              <OwnerPendingApproval />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
           path="/owner/dashboard"
           element={
             token && role === "owner" ? (
@@ -187,7 +211,6 @@ function App() {
 
         {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" replace />} />
-
       </Routes>
     </BrowserRouter>
   );

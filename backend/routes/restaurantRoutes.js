@@ -6,14 +6,16 @@ const authMiddleware = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
 
 /**
- * 🛠 CREATE RESTAURANT (ADMIN ONLY)
+ * 🛠 CREATE RESTAURANT (OWNER)
  */
 router.post("/", authMiddleware, ownerMiddleware, async (req, res) => {
   try {
-    const { name, image, address, isOpen } = req.body;
+    const { name, image, address, cuisine, isOpen } = req.body;
+
     const existingRestaurant = await Restaurant.findOne({
       owner: req.user.id,
     });
+
     if (existingRestaurant) {
       return res
         .status(400)
@@ -24,40 +26,41 @@ router.post("/", authMiddleware, ownerMiddleware, async (req, res) => {
       name,
       image,
       address,
+      cuisine,
       isOpen,
-      owner:req.user.id,
+      owner: req.user.id,
+      approvalStatus: "pending",
     });
 
     const savedRestaurant = await restaurant.save();
     res.status(201).json(savedRestaurant);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to create restaurant" });
+    res.status(500).json({
+      message: "Failed to create restaurant",
+    });
   }
 });
 
 /**
- * 🍽 GET ALL RESTAURANTS (USER)
+ * 🏪 GET MY RESTAURANT (OWNER)
  */
-// GET MY RESTAURANT (OWNER)
 router.get("/owner/my", authMiddleware, async (req, res) => {
   try {
-
     const restaurant = await Restaurant.findOne({
-      owner: req.user.id
+      owner: req.user.id,
     });
 
     if (!restaurant) {
       return res.status(404).json({
-        message: "No restaurant found"
+        message: "No restaurant found",
       });
     }
 
-    // ✅ BLOCK OWNER IF NOT APPROVED
-    if (restaurant.approvalStatus !== "approved") {
+    if (restaurant.approvalStatus === "pending") {
       return res.status(403).json({
-        message:
-          "Your restaurant is pending admin approval"
+        message: "Your restaurant is pending admin approval",
       });
     }
 
@@ -65,21 +68,35 @@ router.get("/owner/my", authMiddleware, async (req, res) => {
 
   } catch (error) {
     res.status(500).json({
-      message: "Server error"
+      message: "Server error",
     });
   }
 });
+
 /**
  * 🍽 GET ALL RESTAURANTS (PUBLIC / USER)
  */
 router.get("/", async (req, res) => {
   try {
-    const restaurants = await Restaurant.find();
+    const restaurants = await Restaurant.find({
+      $or: [
+        { approvalStatus: "approved" },
+        { approvalStatus: { $exists: false } }
+      ]
+    });
+
     res.json(restaurants);
+
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 });
+
+/**
+ * ⏳ PENDING RESTAURANTS (ADMIN)
+ */
 router.get(
   "/pending",
   authMiddleware,
@@ -87,18 +104,22 @@ router.get(
   async (req, res) => {
     try {
       const restaurants = await Restaurant.find({
-        approvalStatus: "pending"
+        approvalStatus: "pending",
       }).populate("owner", "name email");
 
       res.json(restaurants);
 
     } catch (error) {
       res.status(500).json({
-        message: "Server error"
+        message: "Server error",
       });
     }
   }
 );
+
+/**
+ * ✅ APPROVE / REJECT
+ */
 router.put(
   "/:id/approve",
   authMiddleware,
@@ -107,28 +128,25 @@ router.put(
     try {
       const { status } = req.body;
 
-      const restaurant = await Restaurant.findById(
-        req.params.id
-      );
+      const restaurant = await Restaurant.findById(req.params.id);
 
       if (!restaurant) {
         return res.status(404).json({
-          message: "Restaurant not found"
+          message: "Restaurant not found",
         });
       }
 
       restaurant.approvalStatus = status;
-
       await restaurant.save();
 
       res.json({
         message: `Restaurant ${status}`,
-        restaurant
+        restaurant,
       });
 
     } catch (error) {
       res.status(500).json({
-        message: "Server error"
+        message: "Server error",
       });
     }
   }

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import "./OwnerCreateRestaurant.css";
 
 const OwnerCreateRestaurant = () => {
-  const { user } = useAuth();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     name: "",
@@ -27,46 +29,66 @@ const OwnerCreateRestaurant = () => {
         }
       );
 
-      alert("Restaurant created!");
+      alert("Restaurant created successfully 🎉");
+
+      // after create → dashboard
+      navigate("/owner/dashboard");
+
     } catch (err) {
       alert(err.response?.data?.message || "Error");
     }
   };
 
   return (
-  
-    
-    <div style={{ display: "flex", justifyContent: "space-between", padding: "20px" }}>
-    <h2>Create Your Restaurant</h2>
-    <button onClick={logout}>Logout</button>
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Name"
-          onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
-          }
-        />
-        <input
-          placeholder="Address"
-          onChange={(e) =>
-            setForm({ ...form, address: e.target.value })
-          }
-        />
-        <input
-          placeholder="Cuisine"
-          onChange={(e) =>
-            setForm({ ...form, cuisine: e.target.value })
-          }
-        />
-        <input
-          placeholder="Image URL"
-          onChange={(e) =>
-            setForm({ ...form, image: e.target.value })
-          }
-        />
+    <div className="owner-create-page">
+      <div className="owner-create-card">
+        <h2>Create Your Restaurant 🍽️</h2>
 
-        <button type="submit">Create</button>
-      </form>
+        <form
+          className="owner-create-form"
+          onSubmit={handleSubmit}
+        >
+          <input
+            placeholder="Restaurant Name"
+            value={form.name}
+            onChange={(e) =>
+              setForm({ ...form, name: e.target.value })
+            }
+            required
+          />
+
+          <input
+            placeholder="Address"
+            value={form.address}
+            onChange={(e) =>
+              setForm({ ...form, address: e.target.value })
+            }
+            required
+          />
+
+          <input
+            placeholder="Cuisine"
+            value={form.cuisine}
+            onChange={(e) =>
+              setForm({ ...form, cuisine: e.target.value })
+            }
+            required
+          />
+
+          <input
+            placeholder="Image URL"
+            value={form.image}
+            onChange={(e) =>
+              setForm({ ...form, image: e.target.value })
+            }
+          />
+
+          <button type="submit">Create Restaurant</button>
+          <button type="button" onClick={logout}>
+            Logout
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
