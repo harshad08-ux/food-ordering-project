@@ -13,14 +13,12 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"]
-  }
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
 });
 
-// Make socket available in routes
 app.set("io", io);
 
-// SOCKET CONNECTION
 io.on("connection", (socket) => {
   console.log("🔌 Client connected:", socket.id);
 
@@ -32,35 +30,21 @@ io.on("connection", (socket) => {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 // ROUTES
-const protectedRoutes = require("./routes/protectedRoutes");
-app.use("/api", protectedRoutes);
+app.use("/api", require("./routes/protectedRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/foods", require("./routes/foodRoutes"));
+app.use("/api/orders", require("./routes/orderRoutes"));
+app.use("/api/restaurants", require("./routes/restaurantRoutes"));
+app.use("/api/reviews", require("./routes/reviewRoutes"));
 
-const authRoutes = require("./routes/authRoutes");
-app.use("/api/auth", authRoutes);
-
-const userRoutes = require("./routes/userRoutes");
-app.use("/api/user", userRoutes);
-
-const foodRoutes = require("./routes/foodRoutes");
-app.use("/api/foods", foodRoutes);
-
-const orderRoutes = require("./routes/orderRoutes");
-app.use("/api/orders", orderRoutes);
-
-const restaurantRoutes = require("./routes/restaurantRoutes");
-app.use("/api/restaurants", restaurantRoutes);
-
-const reviewRoutes = require("./routes/reviewRoutes");
-app.use("/api/reviews", reviewRoutes);
-
-// Test route
 app.get("/", (req, res) => {
   res.send("Backend is running successfully 🚀");
 });
 
-// MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
