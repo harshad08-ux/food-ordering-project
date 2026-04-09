@@ -1,36 +1,47 @@
-/* PAGE */
+/* ===============================
+   PAGE
+================================= */
 .restaurants-page {
+  position: relative;
   padding: 40px 60px;
-  background: #f8f9fb;
   min-height: 100vh;
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.82),
+      rgba(255, 255, 255, 0.82)
+    ),
+    url("https://images.unsplash.com/photo-1504674900247-0877df9cc836");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
-/* HEADER */
-.restaurants-header {
-  margin-bottom: 30px;
-}
-
+/* ===============================
+   HEADER
+================================= */
 .restaurants-header h2 {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  color: #1f3b64;
 }
 
 .restaurants-header p {
-  color: #666;
+  color: #777;
   font-size: 15px;
 }
 
-/* SEARCH BAR */
+/* ===============================
+   SEARCH BAR
+================================= */
 .search-bar {
   margin-top: 20px;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .search-bar input {
   width: 100%;
-  padding: 12px 18px;
-  border-radius: 25px;
+  padding: 14px 20px;
+  border-radius: 30px;
   border: 1px solid #ddd;
   font-size: 14px;
   transition: all 0.3s ease;
@@ -38,11 +49,13 @@
 
 .search-bar input:focus {
   outline: none;
-  border-color: #ff7a18;
-  box-shadow: 0 0 0 3px rgba(255, 122, 24, 0.15);
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.15);
 }
 
-/* CUISINE FILTERS */
+/* ===============================
+   FILTER BUTTONS
+================================= */
 .cuisine-filters {
   margin-top: 20px;
   display: flex;
@@ -51,7 +64,7 @@
 }
 
 .filter-btn {
-  padding: 8px 16px;
+  padding: 8px 18px;
   border-radius: 20px;
   border: 1px solid #ddd;
   background: white;
@@ -61,41 +74,49 @@
 }
 
 .filter-btn:hover {
-  background: #ff7a18;
+  background: #ff6b00;
   color: white;
-  border-color: #ff7a18;
+  border-color: #ff6b00;
 }
 
 .filter-btn.active {
-  background: #ff7a18;
+  background: #ff6b00;
   color: white;
-  border-color: #ff7a18;
+  border-color: #ff6b00;
 }
 
-/* GRID */
+/* ===============================
+   GRID
+================================= */
 .restaurants-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 25px;
-  margin-top: 30px;
+  gap: 28px;
+  margin-top: 35px;
 }
 
-/* CARD */
+/* ===============================
+   CARD (GLASS STYLE)
+================================= */
 .restaurant-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  transition: 0.3s;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .restaurant-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* IMAGE */
+/* ===============================
+   IMAGE
+================================= */
 .restaurant-image {
   position: relative;
   height: 180px;
@@ -110,18 +131,20 @@
 }
 
 .restaurant-card:hover .restaurant-image img {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
-/* GRADIENT OVERLAY */
+/* overlay */
 .restaurant-image::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
 }
 
-/* RATING BADGE */
+/* ===============================
+   RATING
+================================= */
 .rating-badge {
   position: absolute;
   top: 12px;
@@ -131,10 +154,12 @@
   font-size: 13px;
   border-radius: 20px;
   font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* INFO */
+/* ===============================
+   INFO
+================================= */
 .restaurant-info {
   padding: 16px;
 }
@@ -143,9 +168,10 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 6px;
+  color: #1f3b64;
 }
 
-.restaurant-address {
+.restaurant-info p {
   font-size: 14px;
   color: #777;
 }
@@ -156,11 +182,23 @@
   font-weight: 500;
 }
 
-/* NO RESULTS */
+/* ===============================
+   EMPTY STATE
+================================= */
 .no-results {
   grid-column: 1 / -1;
   text-align: center;
   color: #777;
-  margin-top: 30px;
+  margin-top: 40px;
   font-size: 16px;
+}
+body.dark-mode .restaurants-page {
+  background: linear-gradient(
+      rgba(17, 24, 39, 0.82),
+      rgba(17, 24, 39, 0.82)
+    ),
+    url("https://images.unsplash.com/photo-1504674900247-0877df9cc836");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }

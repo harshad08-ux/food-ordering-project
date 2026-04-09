@@ -5,18 +5,22 @@
   box-sizing: border-box;
 }
 
-body {
+body,
+#root,
+.home-page-wrapper {
+  min-height: 100vh;
   margin: 0;
-  font-family: "Inter", "Segoe UI", sans-serif;
-  background: #f4f6f8;
-  color: #2c3e50;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5, #fde68a);
+  font-family: Arial, sans-serif;
+  transition: 0.3s ease;
 }
 
 /* =======================
    NAVBAR
 ======================= */
 .navbar {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
   padding: 16px 24px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   display: flex;
@@ -29,6 +33,11 @@ body {
   font-size: 22px;
 }
 
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 .nav-buttons button {
   background: #ff6b00;
   border: none;
@@ -37,7 +46,6 @@ body {
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
-  margin-left: 8px;
 }
 
 .nav-buttons button:hover {
@@ -52,10 +60,10 @@ body {
   margin: auto;
   padding: 24px;
 }
+
 .page-content {
   padding-bottom: 80px;
 }
-
 
 /* =======================
    HERO
@@ -152,6 +160,30 @@ body {
   margin: 10px 0;
 }
 
+/* =======================
+   DARK MODE
+======================= */
+body.dark-mode,
+body.dark-mode #root,
+body.dark-mode .home-page-wrapper {
+  background: linear-gradient(135deg, #111827, #1f2937);
+  color: white;
+}
+
+body.dark-mode .navbar {
+  background: rgba(31, 41, 55, 0.75);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .food-card {
+  background: #1f2937;
+  color: white;
+}
+
+body.dark-mode .hero p,
+body.dark-mode .food-card .price {
+  color: #fbbf24;
+}
 
 /* 📱 MOBILE NAVBAR */
 @media (max-width: 768px) {
@@ -174,7 +206,6 @@ body {
   }
 }
 
-
 /* 📱 FOOD GRID MOBILE */
 @media (max-width: 600px) {
   .food-grid {
@@ -191,5 +222,45 @@ body {
 }
 
 button {
-  min-height: 44px; /* Apple mobile standard */
+  min-height: 44px;
+}
+/* ===============================
+   DARK MODE FIX
+================================= */
+body.dark-mode .restaurants-header h2 {
+  color: white !important;
+}
+
+body.dark-mode .restaurants-header p {
+  color: #d1d5db !important;
+}
+
+body.dark-mode .restaurant-info h3 {
+  color: #1f3b64 !important;
+}
+
+body.dark-mode .restaurant-info p,
+body.dark-mode .restaurant-status {
+  color: #666 !important;
+}
+
+body.dark-mode .search-bar input {
+  background: #1f2937;
+  color: white;
+  border: 1px solid #374151;
+}
+
+body.dark-mode .filter-btn {
+  background: #1f2937;
+  color: white;
+  border-color: #374151;
+}
+
+body.dark-mode .filter-btn.active {
+  background: #ff6b00;
+  border-color: #ff6b00;
+}
+
+body.dark-mode .rating-badge {
+  color: #111827;
 }

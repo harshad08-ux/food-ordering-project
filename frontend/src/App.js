@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 
 import Login from "./pages/Login";
@@ -27,6 +28,20 @@ function App() {
 
   const token = user?.token;
   const role = user?.role;
+
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
 
   return (
     <BrowserRouter>
@@ -73,14 +88,21 @@ function App() {
           path="/home"
           element={
             token && role === "user" ? (
-              <>
+              <div className="home-page-wrapper">
                 <header className="navbar">
                   <h1>Food Ordering App 🍔</h1>
-                  <button onClick={logout}>Logout</button>
+
+                  <div className="nav-buttons">
+                    <button onClick={() => setDarkMode(!darkMode)}>
+                      {darkMode ? "☀️ Light" : "🌙 Dark"}
+                    </button>
+                    <button onClick={logout}>Logout</button>
+                  </div>
                 </header>
+
                 <Restaurants />
                 <BottomNav />
-              </>
+              </div>
             ) : (
               <Navigate to="/login" replace />
             )

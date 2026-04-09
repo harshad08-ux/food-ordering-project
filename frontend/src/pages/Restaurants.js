@@ -85,7 +85,9 @@ const Restaurants = () => {
                 }
                 alt={restaurant.name}
               />
-              <div className="rating-badge">⭐ 4.5</div>
+              <div className="rating-badge">
+  ⭐ {(4 + (restaurant.name.length % 10) / 10).toFixed(1)}
+</div>
             </div>
 
             <div className="restaurant-info">
