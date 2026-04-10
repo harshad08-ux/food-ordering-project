@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Restaurants from "./pages/Restaurants";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
+import CheckoutPayment from "./pages/CheckoutPayment";
 import MyOrders from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminOrders from "./pages/AdminOrders";
@@ -131,6 +132,18 @@ function App() {
                 <Cart />
                 <BottomNav />
               </>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        {/* 💳 PAYMENT */}
+        <Route
+          path="/checkout-payment"
+          element={
+            token && role === "user" ? (
+              <CheckoutPayment />
             ) : (
               <Navigate to="/login" replace />
             )

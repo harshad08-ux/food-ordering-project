@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const Stripe = require("stripe");
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const Order = require("../models/Order");
 const Food = require("../models/Food");
@@ -12,7 +15,37 @@ const ownerMiddleware = require("../middleware/ownerMiddleware");
 
 // ================= USER ROUTES =================
 
-// ✅ CREATE ORDER
+// ✅ CREATE PAYMENT INTENT
+router.post(
+  "/create-payment-intent",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { amount } = req.body;
+
+      const paymentIntent =
+        await stripe.paymentIntents.create({
+          amount: Math.round(amount * 100),
+          currency: "inr",
+          automatic_payment_methods: {
+            enabled: true,
+          },
+        });
+
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+      });
+
+    } catch (error) {
+      console.error("Stripe error:", error);
+      res.status(500).json({
+        message: "Payment failed",
+      });
+    }
+  }
+);
+
+// ✅ CREATE ORDER AFTER PAYMENT SUCCESS
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { items, totalPrice } = req.body;
@@ -29,7 +62,6 @@ router.post("/", authMiddleware, async (req, res) => {
 
     const savedOrder = await order.save();
 
-    // ✅ SOCKET REALTIME NOTIFICATION
     const io = req.app.get("io");
     if (io) {
       io.emit("new_order", savedOrder);
@@ -141,55 +173,51 @@ router.get(
 );
 
 // ✅ UPDATE ORDER STATUS
-router.put(
-  "/:id",
-  authMiddleware,
-  async (req, res) => {
-    try {
-      const { status } = req.body;
+router.put("/:id", authMiddleware, async (req, res) => {
+  try {
+    const { status } = req.body;
 
-      const allowedStatuses = [
-        "pending",
-        "accepted",
-        "preparing",
-        "out_for_delivery",
-        "delivered",
-        "cancelled",
-      ];
+    const allowedStatuses = [
+      "pending",
+      "accepted",
+      "preparing",
+      "out_for_delivery",
+      "delivered",
+      "cancelled",
+    ];
 
-      if (!allowedStatuses.includes(status)) {
-        return res.status(400).json({
-          message: "Invalid status",
-        });
-      }
-
-      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return res.status(400).json({
-          message: "Invalid Order ID",
-        });
-      }
-
-      const order = await Order.findById(req.params.id);
-
-      if (!order) {
-        return res.status(404).json({
-          message: "Order not found",
-        });
-      }
-
-      order.status = status;
-      await order.save();
-
-      res.json(order);
-
-    } catch (error) {
-      console.error("Update order error:", error);
-      res.status(500).json({
-        message: error.message,
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status",
       });
     }
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        message: "Invalid Order ID",
+      });
+    }
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    order.status = status;
+    await order.save();
+
+    res.json(order);
+
+  } catch (error) {
+    console.error("Update order error:", error);
+    res.status(500).json({
+      message: error.message,
+    });
   }
-);
+});
 
 // ✅ OWNER DASHBOARD STATS
 router.get(
