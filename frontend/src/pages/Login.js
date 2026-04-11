@@ -11,26 +11,22 @@ const Login = () => {
   const [form, setForm] = useState({
     email: "",
     password: "",
-    role: "user" // UI only
   });
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      // ✅ send only email + password
       const res = await axios.post(
         "http://localhost:5000/api/auth/login",
         {
           email: form.email,
-          password: form.password
+          password: form.password,
         }
       );
 
-      // ✅ save auth
       login(res.data);
 
-      // ✅ role comes from DB response
       const role = res.data.user.role;
 
       if (role === "admin") {
@@ -75,18 +71,6 @@ const Login = () => {
             }
             required
           />
-
-          {/* UI only role selector */}
-          <select
-            value={form.role}
-            onChange={(e) =>
-              setForm({ ...form, role: e.target.value })
-            }
-          >
-            <option value="user">👤 Customer</option>
-            <option value="owner">🍔 Restaurant Owner</option>
-            <option value="admin">🛠 Admin</option>
-          </select>
 
           <button type="submit">Login</button>
         </form>
