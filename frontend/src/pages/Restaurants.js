@@ -17,13 +17,11 @@ const Restaurants = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  // 🍜 GET UNIQUE CUISINES
   const cuisines = [
     "All",
     ...new Set(restaurants.map((r) => r.cuisine).filter(Boolean)),
   ];
 
-  // 🔎 FILTER LOGIC
   const filteredRestaurants = restaurants.filter((restaurant) => {
     const matchesSearch = restaurant.name
       .toLowerCase()
@@ -42,7 +40,6 @@ const Restaurants = () => {
         <h2>🍽️ Explore Restaurants</h2>
         <p>Discover the best food near you</p>
 
-        {/* 🔎 SEARCH */}
         <div className="search-bar">
           <input
             type="text"
@@ -52,7 +49,6 @@ const Restaurants = () => {
           />
         </div>
 
-        {/* 🍱 CUISINE FILTERS */}
         <div className="cuisine-filters">
           {cuisines.map((cuisine, index) => (
             <button
@@ -86,15 +82,15 @@ const Restaurants = () => {
                 alt={restaurant.name}
               />
               <div className="rating-badge">
-  ⭐ {(4 + (restaurant.name.length % 10) / 10).toFixed(1)}
-</div>
+                ⭐ {(4 + (restaurant.name.length % 10) / 10).toFixed(1)}
+              </div>
             </div>
 
             <div className="restaurant-info">
               <h3>{restaurant.name}</h3>
               <p>{restaurant.address}</p>
               <p className="restaurant-status">
-                {restaurant.isOpen ? "🟢 Open Now" : "🔴 Closed"}
+                🍽️ Available
               </p>
             </div>
           </div>
