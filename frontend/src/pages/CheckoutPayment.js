@@ -39,13 +39,15 @@ const CheckoutForm = () => {
       return;
     }
 
-    // ✅ CREATE ORDER AFTER PAYMENT SUCCESS
+    const safeTotal =
+      Number(totalAmount) > 0 ? Number(totalAmount) : 50;
+
     const orderData = {
       items: cart.map((item) => ({
         food: item._id,
         quantity: item.quantity,
       })),
-      totalPrice: totalAmount,
+      totalPrice: safeTotal,
     };
 
     await fetch("http://localhost:5000/api/orders", {
@@ -62,18 +64,35 @@ const CheckoutForm = () => {
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "50px auto" }}>
+    <div
+      style={{
+        maxWidth: "500px",
+        margin: "50px auto",
+        background: "white",
+        padding: "30px",
+        borderRadius: "16px",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+      }}
+    >
       <h2>💳 Complete Payment</h2>
+
       <PaymentElement />
+
       <button
         onClick={handlePayment}
         style={{
           marginTop: "20px",
           width: "100%",
           padding: "12px",
+          border: "none",
+          borderRadius: "8px",
+          background: "#ff7a18",
+          color: "white",
+          fontWeight: "600",
+          cursor: "pointer",
         }}
       >
-        Pay ₹{totalAmount}
+        Pay ₹{Number(totalAmount) > 0 ? totalAmount : 50}
       </button>
     </div>
   );
@@ -87,6 +106,9 @@ const CheckoutPayment = () => {
 
   useEffect(() => {
     const createIntent = async () => {
+      const safeAmount =
+        Number(totalAmount) > 0 ? Number(totalAmount) : 50;
+
       const res = await fetch(
         "http://localhost:5000/api/orders/create-payment-intent",
         {
@@ -96,7 +118,7 @@ const CheckoutPayment = () => {
             Authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify({
-            amount: totalAmount,
+            amount: safeAmount,
           }),
         }
       );
@@ -111,10 +133,7 @@ const CheckoutPayment = () => {
   if (!clientSecret) return <p>Loading payment...</p>;
 
   return (
-    <Elements
-      stripe={stripePromise}
-      options={{ clientSecret }}
-    >
+    <Elements stripe={stripePromise} options={{ clientSecret }}>
       <CheckoutForm />
     </Elements>
   );

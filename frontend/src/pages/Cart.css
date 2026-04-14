@@ -91,3 +91,29 @@
   text-align: center;
   margin-top: 100px;
 }
+/* 🌙 DARK MODE FIX FOR CART PAGE */
+body.dark-mode .cart-page {
+  background: linear-gradient(135deg, #0f172a, #111827, #1e293b);
+  color: white;
+}
+
+body.dark-mode .cart-title,
+body.dark-mode .cart-summary h3 {
+  color: #f9fafb;
+}
+
+body.dark-mode .cart-card {
+  background: #1f2937;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-mode .cart-info h4,
+body.dark-mode .cart-info p,
+body.dark-mode .qty-controller span {
+  color: #f9fafb;
+}
+
+body.dark-mode .cart-summary {
+  border-top: 1px solid #374151;
+}

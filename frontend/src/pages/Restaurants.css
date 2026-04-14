@@ -202,3 +202,50 @@ body.dark-mode .restaurants-page {
   background-position: center;
   background-attachment: fixed;
 }
+/* 🌙 DARK MODE FIX FOR RESTAURANT PAGE */
+body.dark-mode .restaurant-page {
+  background: linear-gradient(135deg, #0f172a, #111827, #1e293b);
+}
+
+body.dark-mode .restaurant-hero::after {
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+body.dark-mode .hero-overlay,
+body.dark-mode .hero-overlay h1,
+body.dark-mode .hero-overlay p,
+body.dark-mode .hero-meta,
+body.dark-mode .hero-meta span {
+  color: white;
+}
+
+body.dark-mode .menu-category h3 {
+  color: #f9fafb;
+}
+
+body.dark-mode .menu-card {
+  background: #1f2937;
+  color: white;
+}
+
+body.dark-mode .menu-content h4,
+body.dark-mode .menu-content p,
+body.dark-mode .food-header h4,
+body.dark-mode .price {
+  color: #f9fafb;
+}
+
+body.dark-mode .rating {
+  color: #facc15;
+}
+/* 🌙 DARK MODE FIX FOR FLOATING VIEW CART BAR */
+/* 🌙 FINAL FIX FOR FLOATING CART BAR */
+body.dark-mode div[style*="position: fixed"] {
+  background: #1f2937 !important;
+  color: white !important;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.35) !important;
+}
+
+body.dark-mode div[style*="position: fixed"] * {
+  color: white !important;
+}

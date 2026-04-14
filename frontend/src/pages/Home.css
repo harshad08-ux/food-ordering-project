@@ -254,7 +254,23 @@
 .view-cart-btn:hover {
   background: #e86c0f;
 }
+/* 🌙 DARK MODE FIX FOR FLOATING VIEW CART BAR */
+/* 🌙 DARK MODE FIX FOR FLOATING CART */
+body.dark-mode .floating-cart {
+  background: #1f2937 !important;
+  color: white !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+}
 
+body.dark-mode .cart-info,
+body.dark-mode .cart-total {
+  color: #f9fafb !important;
+}
+
+body.dark-mode .view-cart-btn {
+  background: #ff7a18;
+  color: white;
+}
 @media (max-width: 768px) {
   .floating-cart {
     bottom: 90px;

@@ -23,9 +23,14 @@ router.post(
     try {
       const { amount } = req.body;
 
+      const finalAmount = Math.max(
+        50,
+        Math.round(Number(amount) * 100)
+      );
+
       const paymentIntent =
         await stripe.paymentIntents.create({
-          amount: Math.round(amount * 100),
+          amount: finalAmount,
           currency: "inr",
           automatic_payment_methods: {
             enabled: true,

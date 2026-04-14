@@ -264,3 +264,20 @@ body.dark-mode .filter-btn.active {
 body.dark-mode .rating-badge {
   color: #111827;
 }
+/* 🌙 DARK MODE FIX FOR FLOATING VIEW CART BAR */
+body.dark-mode .view-cart-bar {
+  background: #1f2937;
+  color: white;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-mode .view-cart-bar h4,
+body.dark-mode .view-cart-bar p,
+body.dark-mode .view-cart-bar span {
+  color: #f9fafb;
+}
+
+body.dark-mode .view-cart-btn {
+  background: #ff7a18;
+  color: white;
+}
