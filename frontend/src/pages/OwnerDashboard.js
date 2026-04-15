@@ -15,6 +15,9 @@ const OwnerDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [restaurant, setRestaurant] = useState(null);
+  const [restaurantImage, setRestaurantImage] = useState(null);
+
   const [stats, setStats] = useState({
     totalOrders: 0,
     totalRevenue: 0,
@@ -23,24 +26,25 @@ const OwnerDashboard = () => {
   const [weeklyRevenue, setWeeklyRevenue] = useState([]);
   const [topFoods, setTopFoods] = useState([]);
 
-  useEffect(() => {
-    checkRestaurantApproval();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+  fetchRestaurant();
 
-    socket.on("new_order", (order) => {
-      toast.success(`🔔 New Order Received! ₹${order.totalPrice}`);
-      fetchStats();
-      fetchWeeklyRevenue();
-      fetchTopFoods();
-    });
+  socket.on("new_order", (order) => {
+    toast.success(`🔔 New Order Received! ₹${order.totalPrice}`);
+    fetchStats();
+    fetchWeeklyRevenue();
+    fetchTopFoods();
+  });
 
-    return () => {
-      socket.off("new_order");
-    };
-  }, []);
+  return () => {
+    socket.off("new_order");
+  };
+}, []);
 
-  const checkRestaurantApproval = async () => {
+  const fetchRestaurant = async () => {
     try {
-      await axios.get(
+      const res = await axios.get(
         "http://localhost:5000/api/restaurants/owner/my",
         {
           headers: {
@@ -49,12 +53,42 @@ const OwnerDashboard = () => {
         }
       );
 
+      setRestaurant(res.data);
+
       fetchStats();
       fetchWeeklyRevenue();
       fetchTopFoods();
-
     } catch (err) {
       navigate("/owner/create-restaurant", { replace: true });
+    }
+  };
+
+  const handleRestaurantImageUpdate = async () => {
+    if (!restaurantImage) {
+      alert("Please select an image");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("image", restaurantImage);
+
+      await axios.put(
+        `http://localhost:5000/api/restaurants/${restaurant._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      toast.success("✅ Restaurant image updated");
+      setRestaurantImage(null);
+      fetchRestaurant();
+    } catch (error) {
+      console.error(error);
+      toast.error("❌ Failed to update image");
     }
   };
 
@@ -148,21 +182,44 @@ const OwnerDashboard = () => {
         <h2>🍔 Owner Panel</h2>
 
         <div className="nav-buttons">
-          <button onClick={() => navigate("/owner/menu")}>
-            Menu
-          </button>
-
-          <button onClick={() => navigate("/owner/orders")}>
-            Orders
-          </button>
-
-          <button className="logout" onClick={logout}>
-            Logout
-          </button>
+          <button onClick={() => navigate("/owner/menu")}>Menu</button>
+          <button onClick={() => navigate("/owner/orders")}>Orders</button>
+          <button className="logout" onClick={logout}>Logout</button>
         </div>
       </div>
 
       <h1 className="dashboard-title">📊 Restaurant Dashboard</h1>
+
+      {/* 🖼 Restaurant Image Update */}
+      {restaurant && (
+        <div className="restaurant-image-section">
+          {restaurant.image && (
+            <img
+              src={restaurant.image}
+              alt={restaurant.name}
+              className="restaurant-preview"
+            />
+          )}
+                
+        <div className="restaurant-upload-controls">
+          <h3>🖼 Restaurant Image</h3>
+      
+          <input
+            type="file"
+            accept="image/*"
+            className="restaurant-file-input"
+            onChange={(e) => setRestaurantImage(e.target.files[0])}
+          />
+      
+          <button
+            className="update-image-btn"
+            onClick={handleRestaurantImageUpdate}
+          >
+            Update Image
+          </button>
+        </div>
+      </div>
+      )}
 
       <div className="dashboard-cards">
         <div className="card">
@@ -179,35 +236,17 @@ const OwnerDashboard = () => {
       <div className="charts-grid">
         <div className="chart-container">
           <h3>📈 Performance Overview</h3>
-          <Bar
-            data={performanceChart}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-            }}
-          />
+          <Bar data={performanceChart} options={{ responsive: true, maintainAspectRatio: false }} />
         </div>
 
         <div className="chart-container">
           <h3>📅 Weekly Revenue</h3>
-          <Bar
-            data={weeklyChart}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-            }}
-          />
+          <Bar data={weeklyChart} options={{ responsive: true, maintainAspectRatio: false }} />
         </div>
 
         <div className="chart-container">
           <h3>🔥 Top Selling Foods</h3>
-          <Bar
-            data={topFoodChart}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-            }}
-          />
+          <Bar data={topFoodChart} options={{ responsive: true, maintainAspectRatio: false }} />
         </div>
       </div>
 

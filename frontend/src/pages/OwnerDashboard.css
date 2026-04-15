@@ -6,34 +6,60 @@
 
 /* NAVBAR */
 
+/* ===============================
+   PREMIUM OWNER NAVBAR
+================================= */
 .owner-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
+  background: white;
+  padding: 18px 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .owner-navbar h2 {
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f3b64;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* BUTTON GROUP */
+.nav-buttons {
+  display: flex;
+  gap: 14px;
 }
 
 .nav-buttons button {
-  margin-left: 12px;
-  padding: 10px 18px;
+  padding: 12px 22px;
   border: none;
-  background: #ff6b00;
+  background: linear-gradient(135deg, #ff7a18, #ff6b00);
   color: white;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.25);
 }
 
 .nav-buttons button:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(255, 107, 0, 0.35);
 }
 
 .logout {
-  background: #e53935;
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+}
+
+.logout:hover {
+  box-shadow: 0 8px 18px rgba(239, 68, 68, 0.35) !important;
 }
 
 .dashboard-title {
@@ -93,4 +119,64 @@
 
 .chart-container canvas {
   height: 250px !important;
+}
+/* ===============================
+   COMPACT RESTAURANT IMAGE CARD
+================================= */
+.restaurant-image-section {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  max-width: 620px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.restaurant-image-section h3 {
+  font-size: 18px;
+  color: #1f3b64;
+  margin-bottom: 10px;
+}
+
+.restaurant-preview {
+  width: 180px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+  flex-shrink: 0;
+}
+
+.restaurant-upload-controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.restaurant-file-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.update-image-btn {
+  width: fit-content;
+  padding: 10px 18px;
+  background: #ff6b00;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.update-image-btn:hover {
+  background: #e85f00;
 }
